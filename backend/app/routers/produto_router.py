@@ -39,6 +39,14 @@ def buscar_produtos_por_termo(
         offset=offset,
     )
 
+# Endpoint para listar as categorias distintas dos produtos
+@router.get("/categorias", response_model=list[str])
+def listar_categorias_produtos(
+    db: Session = Depends(get_db),
+):
+    return produto_service.listar_categorias_produtos(db)
+
+
 # Endpoint para buscar um produto por id, onde é retornado o detalhe do produto, incluindo as métricas e avaliações
 @router.get("/{id_produto}", response_model=ProdutoDetalheResponse)
 def buscar_detalhe_produto(

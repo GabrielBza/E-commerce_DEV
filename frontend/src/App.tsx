@@ -1,11 +1,23 @@
-function App() {
-  return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <h1 className="text-3xl font-bold text-blue-600">
-        Tailwind funcionando
-      </h1>
-    </div>
-  )
-}
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-export default App
+import CatalogoPage from "./pages/CatalogoPage";
+import DetalheProdutoPage from "./pages/DetalheProdutoPage";
+import NovoProdutoPage from "./pages/NovoProdutoPage";
+import EditarProdutoPage from "./pages/EditarProdutoPage";
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to="/produtos" replace />} />
+        <Route path="/produtos" element={<CatalogoPage />} />
+        <Route path="/produtos/novo" element={<NovoProdutoPage />} />
+        <Route path="/produtos/:idProduto" element={<DetalheProdutoPage />} />
+        <Route
+          path="/produtos/:idProduto/editar"
+          element={<EditarProdutoPage />}
+        />
+      </Routes>
+    </BrowserRouter>
+  );
+}

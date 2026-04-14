@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
-body {
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
   margin: 0;
+}
+
+body {
+  min-height: 100vh;
 }

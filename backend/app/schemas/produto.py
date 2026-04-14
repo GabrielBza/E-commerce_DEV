@@ -63,6 +63,7 @@ class ProdutoResponse(BaseModel):
     comprimento_centimetros: Optional[float]
     altura_centimetros: Optional[float]
     largura_centimetros: Optional[float]
+    imagem_categoria: Optional[str] = None
 
 # Modelo de resposta das avaliações do produto, onde são retornados os campos relacionados à avaliação
 class AvaliacaoProdutoResponse(BaseModel):
@@ -91,3 +92,5 @@ class ProdutoDetalheResponse(BaseModel):
     media_avaliacoes: Optional[float]
 
     avaliacoes: list[AvaliacaoProdutoResponse]
+
+    imagem_categoria: Optional[str] = None

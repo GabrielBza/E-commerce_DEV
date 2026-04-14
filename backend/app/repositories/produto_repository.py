@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.models.produto import Produto
 from app.models.item_pedido import ItemPedido
 from app.models.avaliacao_pedido import AvaliacaoPedido
+from app.models.categoria_imagem import CategoriaImagem
 
 # Arquivo responsável por realizar as operações de banco de dados relacionadas aos produtos
 # Colsultas e operações de persistência
@@ -15,7 +16,6 @@ from app.models.avaliacao_pedido import AvaliacaoPedido
 def listar_produtos(db: Session, limit: int = 50, offset: int = 0) -> list[Produto]:
     statement = (
         select(Produto)
-        .order_by(Produto.nome_produto.asc())
         .limit(limit)
         .offset(offset)
     )
@@ -48,7 +48,6 @@ def buscar_produtos_por_termo(
                 Produto.categoria_produto.ilike(f"%{termo}%"),
             )
         )
-        .order_by(Produto.nome_produto.asc())
         .limit(limit)
         .offset(offset)
     )
@@ -156,3 +155,20 @@ def atualizar_produto(db: Session, produto: Produto) -> Produto:
 def remover_produto(db: Session, produto: Produto) -> None:
     db.delete(produto)
     db.commit()
+
+# Função auxiliar para buscar a imagem relacionada à categoria do produto
+def buscar_imagem_por_categoria(db: Session, categoria: str) -> Optional[str]:
+    statement = (
+        select(CategoriaImagem.link)
+        .where(CategoriaImagem.categoria == categoria)
+    )
+    return db.scalar(statement)
+
+# Função para listar as categorias distintas dos produtos
+def listar_categorias_produtos(db: Session) -> list[str]:
+    statement = (
+        select(Produto.categoria_produto)
+        .distinct()
+        .order_by(Produto.categoria_produto.asc())
+    )
+    return list(db.scalars(statement).all())
