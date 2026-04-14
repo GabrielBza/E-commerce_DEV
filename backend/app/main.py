@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from app.routers.produto_router import router as produto_router
 
 app = FastAPI(
     title="Sistema de Compras Online",
@@ -11,6 +12,7 @@ app = FastAPI(
 def health_check():
     return {"status": "ok", "message": "API rodando com sucesso!"}
 
+app.include_router(produto_router)
 
 if __name__ == "__main__":
     import uvicorn
