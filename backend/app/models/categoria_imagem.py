@@ -3,7 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import Base
 
-
+# Novo model para guardar os links das imagens das categorias
 class CategoriaImagem(Base):
     __tablename__ = "categorias_imagens"
 

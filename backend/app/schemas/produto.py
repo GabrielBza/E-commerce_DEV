@@ -2,14 +2,18 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, field_validator, ConfigDict
 
+# Arquivo que define os modelos de entrada e de saída dos produtos
+# Responsável por validar e estruturar os dados que trafegam entre o cliente e o backend
+# Regras de preenchimento de campos e de entradas de texto
 
+# Função simples que retorna strings após aplicação de strip ou valores nullos caso a string seja vazia ou nula
 def normalizar_string(value: Optional[str]) -> Optional[str]:
     if value is None:
         return None
     value = value.strip()
     return value if value else None
 
-
+# Modelo de base do produto, juntamente com uma validação que não permite que campos obrigatórios sejam vazios ou nulos
 class ProdutoBase(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -28,11 +32,11 @@ class ProdutoBase(BaseModel):
             raise ValueError("Campo obrigatório não pode ser vazio.")
         return value
 
-
+# Apenas uma separação de modelo para criar um produto (sem o campo de id que é grado automaticamente)
 class ProdutoCreate(ProdutoBase):
     pass
 
-
+# Modelo de atualização do produto, onde os campos são opcionais, mas caso sejam enviados, não podem ser vazios ou nulos
 class ProdutoUpdate(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -48,7 +52,7 @@ class ProdutoUpdate(BaseModel):
     def strip_string_opcional(cls, value: Optional[str]) -> Optional[str]:
         return normalizar_string(value)
 
-
+# Modelo de resposta do produto, onde o id é incluído e os campos são retornados exatamente como estão no banco de dados
 class ProdutoResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -59,3 +63,31 @@ class ProdutoResponse(BaseModel):
     comprimento_centimetros: Optional[float]
     altura_centimetros: Optional[float]
     largura_centimetros: Optional[float]
+
+# Modelo de resposta das avaliações do produto, onde são retornados os campos relacionados à avaliação
+class AvaliacaoProdutoResponse(BaseModel):
+    id_avaliacao: str
+    id_pedido: str
+    avaliacao: int
+    titulo_comentario: Optional[str]
+    comentario: Optional[str]
+    data_comentario: Optional[str]
+    data_resposta: Optional[str]
+
+# Modelo de resposta detalhada do produto, onde além dos campos básicos, são incluídas métricas de vendas e 
+# avaliações (Algumas avaliações também são incluídas)
+class ProdutoDetalheResponse(BaseModel):
+    id_produto: str
+    nome_produto: str
+    categoria_produto: str
+    peso_produto_gramas: Optional[float]
+    comprimento_centimetros: Optional[float]
+    altura_centimetros: Optional[float]
+    largura_centimetros: Optional[float]
+
+    quantidade_vendas: int
+    valor_total_vendido: float
+    quantidade_avaliacoes: int
+    media_avaliacoes: Optional[float]
+
+    avaliacoes: list[AvaliacaoProdutoResponse]
